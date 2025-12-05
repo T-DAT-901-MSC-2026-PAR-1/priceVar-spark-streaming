@@ -1,0 +1,28 @@
+services:
+  priceVar-spark-submit:
+    build:
+      context: ../../
+      dockerfile: docker/dev/Dockerfile
+    container_name: priceVar-spark-submit-runner
+    working_dir: /opt/app
+    volumes:
+      - ../../:/opt/app:ro
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=${KAFKA_BOOTSTRAP_SERVERS}
+      - KAFKA_SUBSCRIBE_TOPICS=${KAFKA_SUBSCRIBE_TOPICS}
+      - KAFKA_OUTPUT_TOPIC=${KAFKA_OUTPUT_TOPIC}
+      - SPARK_APP_NAME=${SPARK_APP_NAME}
+      - SPARK_MASTER_URL=${SPARK_MASTER_URL}
+    restart: unless-stopped
+    networks:
+      - spark_spark
+      - kafka_kafka
+    ports:
+      - 4041:4040
+
+networks:
+  spark_spark:
+    external: true
+  kafka_kafka:
+    external: true
+
